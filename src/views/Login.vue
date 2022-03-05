@@ -10,6 +10,7 @@
                 <label for="senha">Senha</label>
                 <input type="password" class="form-control" v-model="usuario.senha">
             </div>
+            <p class="alert alert-danger" v-if="mensagemErro"> {{ mensagemErro }} </p>
             <button type="submit" class="btn btn-primary btn-block">Logar</button>
             <router-link :to="{ name: 'novo.usuario' }">
                 Cadastre-se aqui
@@ -27,14 +28,23 @@ export default {
             usuario: {
                 email: '',
                 senha: ''
-            }
+            },
+            mensagemErro: null
         }
     },
 
     methods: {
         efetuarLogin() {
             this.$store.dispatch('efetuarLogin', this.usuario)
-                .then(() => this.$router.push({name: 'gerentes'}));
+                .then(() => {
+                    this.$router.push({name: 'gerentes'});
+                    this.mensagemErro = '';
+                })
+                .catch(erro => {
+                    if(erro.request.status === 401) {
+                        this.mensagemErro = 'Login ou senha inválido(s)';
+                    }
+                });
         }
     }
 }
