@@ -22,10 +22,22 @@ export default {
   },
 
   mounted() {
+      if(!this.$store.state.token) {
+          console.log('não pode acessar deslogado');
+          this.$router.push({name: 'login'});
+      }
+
       this.$http.get('gerentes')
-      .then(response => this.gerentes = response.data)
-      .catch(erro => console.log(erro))
-  }
+          .then(response => this.gerentes = response.data)
+          .catch(erro => console.log(erro))
+  },
+
+//   befeoreRouterEnter(to, from, next) {
+// 	  if(!this.$store.state.token) {
+// 		  next({name: 'login'});
+// 	  }
+// 	  next();
+//   }
 }
 </script>
 
